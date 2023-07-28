@@ -1,10 +1,19 @@
 from typing import List
-from fastapi import Query, FastAPI
+from fastapi import FastAPI, Request, Query
+from fastapi.responses import JSONResponse
 
 from app import logic
 
 
 app = FastAPI()
+
+
+@app.exception_handler(Exception)
+def custom_exception_handler(_: Request, exc: Exception):
+    return JSONResponse(
+        status_code=400,
+        content={"message": "Error inesperado. " + str(exc)},
+    )
 
 
 @app.post("/estadisticas/grupo")
